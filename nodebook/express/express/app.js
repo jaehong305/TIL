@@ -1,5 +1,7 @@
 import express from 'express';
 import path from 'path';
+import indexRouter from './routes/index.js';
+import userRouter from './routes/user.js';
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename); // CommonJS가 아닌 module을 사용할경우 ES모듈에는 __dirname 변수가 없어 만들어줘야 한다.
@@ -23,8 +25,12 @@ app.use(
   }
 );
 
+// app.use('/', indexRouter);
+app.use('/user', userRouter); // localhost:3000/user/
+
 // 위에서부터 아래로 실행되며 해당되는 라우터만 실행한다.
 app.get('/', (req, res) => {
+  console.log('host', req.get('host'));
   // res.send('hello'); // send()는 두번씩 할 수 없음(return으로 함수가 종료되는건 아님). Cannot set headers after they are sent to the client
   // res.json({ hi: 'hello' }); // json()/render()도 마찬가지 // res.setHeader('Content-Type', 'text/plain') 또한 뒤에 올수 없다.
   res.sendFile(path.join(__dirname, 'index.html')); // 환경마다 다른 경로 \ / 를 통일하기 위해 현재 디렉토리와 파일을 조인
@@ -72,3 +78,12 @@ app.use((err, req, res, next) => {
 app.listen(app.get('port'), () => {
   console.log('익스프레스 서버 실행');
 });
+
+// req.app: req.app.get('port')식으로 app객체 접근
+// req.body: 미들웨어가 해석한 본문 내용 객체
+// req.params: 라우트 매개변수(:id) 정보 객체 req.params.id
+// req.query: 쿼리스트링(aaa?a=1&b=2) 정보 객체  req.query.a
+// req.cookies: 미들웨어가 해석한 쿠키 정보 객체
+// req.signedCookies: 서명된 경우 쿠키 정보 객체
+// req.ip: 요청한 ip주소
+// req.get('host'): 요청의 헤더값 정보
