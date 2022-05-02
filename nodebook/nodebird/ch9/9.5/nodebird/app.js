@@ -50,7 +50,7 @@ app.use(
   })
 );
 app.use(passport.initialize()); // 요청 객체(req)에 passport 설정 심기
-app.use(passport.session()); // req.session 객체(express-session)에 passport 정보 저장
+app.use(passport.session()); // req.session 객체(express-session)에 passport 정보 저장(express-session 밑에 있어야 한다.)
 
 app.use('/', pageRouter);
 app.use('/auth', authRouter);
