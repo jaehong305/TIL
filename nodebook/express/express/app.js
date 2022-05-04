@@ -9,6 +9,7 @@ const __dirname = path.dirname(__filename); // CommonJS가 아닌 module을 사�
 const app = express();
 app.set('port', process.env.PORT || 3000); // 전역객체처럼 값을 담았다가 app.get('port')으로 쓸 수 있다.
 app.use((req, res, next) => {
+  console.log(req.get('host'));
   console.log('미들웨어(콜백함수)는 모든 요청에 다 실행되어 공통으로 실행할 것들의 중복을 제거해줍니다.');
   next(); // 미들웨어 실행후 다음(요청된 라우터) 실행해줘야 함, 라우터에서는 보통 send로 끝내주어 next()해주지 않아 생략됨.
 });
@@ -30,7 +31,6 @@ app.use('/user', userRouter); // localhost:3000/user/
 
 // 위에서부터 아래로 실행되며 해당되는 라우터만 실행한다.
 app.get('/', (req, res) => {
-  console.log('host', req.get('host'));
   // res.send('hello'); // send()는 두번씩 할 수 없음(return으로 함수가 종료되는건 아님). Cannot set headers after they are sent to the client
   // res.json({ hi: 'hello' }); // json()/render()도 마찬가지 // res.setHeader('Content-Type', 'text/plain') 또한 뒤에 올수 없다.
   res.sendFile(path.join(__dirname, 'index.html')); // 환경마다 다른 경로 \ / 를 통일하기 위해 현재 디렉토리와 파일을 조인
